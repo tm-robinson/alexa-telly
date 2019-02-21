@@ -290,7 +290,7 @@ def play_programme(intent, session, request_id, api_endpoint, api_access_token, 
                 if result == False:
                     speech_output = "There was an error."
                 else:
-                    rest_function + config['rest-functions']['action']['name'] + '/' + config['rest-actions']['play_programme']['name']
+                    rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['play_programme']['name']
                     result, message, code = call_adb_service(rest_function, config, param={'name': programme})
                     if result == False:
                         speech_output = "There was an error.  It was " + message + "."

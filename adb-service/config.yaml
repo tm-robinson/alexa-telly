@@ -100,6 +100,25 @@ programmes:
       min_times: 0
       max_times: 30
     - keypress: KEYCODE_ENTER
+  nursery rhymes:
+      - app: YOUTUBE_PKG
+        activity: YOUTUBE_ACT
+      - wait: 5
+      - keypress: KEYCODE_SEARCH
+      - wait: 2
+      - keypress: KEYCODE_BACK
+      - wait: 2
+      - keypress: KEYCODE_MOVE_END
+      - wait: 1
+      - delete: 50
+      - text: lbb
+      - keypress: KEYCODE_ENTER
+      - keypress_multiple: KEYCODE_DPAD_DOWN
+        times: 6
+      - keypress_rand: KEYCODE_DPAD_RIGHT
+        min_times: 0
+        max_times: 30
+      - keypress: KEYCODE_ENTER
   ben and holly:
     - keypress: KEYCODE_HOME
     - wait: 5
