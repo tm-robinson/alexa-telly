@@ -334,7 +334,7 @@ def adjust_volume(intent, session, request_id, api_endpoint, api_access_token, c
         speech_output = "There was an error."
     else:
         rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['volume_' + direction]['name']
-        result, message, code = call_adb_service(rest_function, config, param={'amount': str(amount)})
+        result, message, code = call_adb_service(rest_function, config, param={'amount': str(amount)}, timeout=10)
         if result == False:
             speech_output = "There was an error."
         else:
