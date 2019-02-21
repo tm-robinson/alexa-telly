@@ -1,0 +1,44 @@
+
+
+rest-functions:
+  connect:
+    name: connect
+    params: 0
+  action:
+    name: action
+    params: 1
+  button:
+    name: button
+    params: 1
+
+rest-actions:
+  skip_ad:
+    name: skip_ad
+    params: 0
+  switch_off:
+    name: switch_off
+    params: 0
+  youtube_search:
+    name: youtube_search
+    params: query
+  netflix_search:
+    name: netflix_search
+    params: query
+  amazon_search:
+    name: amazon_search
+    params: query
+  check_programme:
+    name: check_programme
+    params: name
+  play_programme:
+    name: play_programme
+    params: name
+  volume_up:
+    name: volume_up
+    params: amount
+  volume_down:
+    name: volume_down
+    params: amount
+  volume_set:
+    name: volume_set
+    params: amount

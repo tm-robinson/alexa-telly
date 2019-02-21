@@ -1,0 +1,179 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "telly remote",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SkipAdIntent",
+                    "slots": [],
+                    "samples": [
+                        "stop the advert",
+                        "skip the advert",
+                        "skip advert",
+                        "stop the ad",
+                        "skip the ad",
+                        "skip ad"
+                    ]
+                },
+                {
+                    "name": "SwitchOffIntent",
+                    "slots": [],
+                    "samples": [
+                        "turn the tv off",
+                        "switch the telly off",
+                        "switch the tv off",
+                        "turn off",
+                        "switch off"
+                    ]
+                },
+                {
+                    "name": "YoutubeSearchIntent",
+                    "slots": [
+                        {
+                            "name": "SearchTerm",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "youtube",
+                        "search youtube",
+                        "find me {SearchTerm} on youtube",
+                        "find {SearchTerm} on youtube",
+                        "search for {SearchTerm} on youtube",
+                        "search youtube for {SearchTerm}"
+                    ]
+                },
+                {
+                    "name": "NetflixSearchIntent",
+                    "slots": [
+                        {
+                            "name": "SearchTerm",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "netflix",
+                        "search netflix",
+                        "find me {SearchTerm} on netflix",
+                        "search netflix for {SearchTerm}",
+                        "find {SearchTerm} on netflix",
+                        "search for {SearchTerm} on netflix"
+                    ]
+                },
+                {
+                    "name": "ProgrammeIntent",
+                    "slots": [
+                        {
+                            "name": "Programme",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "start {Programme}",
+                        "play {Programme}"
+                    ]
+                },
+                {
+                    "name": "VolumeUpIntent",
+                    "slots": [
+                        {
+                            "name": "Amount",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "turn the volume up",
+                        "turn up the volume {Amount}",
+                        "turn the volume up {Amount}",
+                        "turn the volume up by {Amount}"
+                    ]
+                },
+                {
+                    "name": "VolumeDownIntent",
+                    "slots": [
+                        {
+                            "name": "Amount",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "turn down the volume by {Amount}",
+                        "turn the volume down",
+                        "turn down the volume {Amount}",
+                        "turn the volume down by {Amount}"
+                    ]
+                },
+                {
+                    "name": "ButtonIntent",
+                    "slots": [
+                        {
+                            "name": "Button",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "press the {Button} key",
+                        "press the {Button} button",
+                        "press {Button}"
+                    ]
+                },
+                {
+                    "name": "VolumeSetIntent",
+                    "slots": [
+                        {
+                            "name": "Amount",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "volume {Amount}",
+                        "set volume as {Amount}",
+                        "set the volume at {Amount}",
+                        "set volume to {Amount}"
+                    ]
+                },
+                {
+                    "name": "AmazonSearchIntent",
+                    "slots": [
+                        {
+                            "name": "SearchTerm",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "search amazon video",
+                        "search amazon",
+                        "amazon",
+                        "search for {SearchTerm} on amazon video",
+                        "search for {SearchTerm} on amazon",
+                        "find {SearchTerm} on amazon video",
+                        "find {SearchTerm} on amazon",
+                        "search amazon video for {SearchTerm}",
+                        "search amazon for {SearchTerm}"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}

@@ -1,0 +1,9 @@
+#URL of rest service running on internal network, accessible from outside
+#e.g. dynamic dns host pointing to your IP, with port forwarded on router
+#to internal linux server
+rest-endpoint: http://myhouse-ip-address.hopto.org:6707/
+
+# username and password the lambda function will use to connect to the REST API
+# should be the same as in the config-secure.yaml for the adb service
+rest-credentials:
+  alexa: Password1
