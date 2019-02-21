@@ -165,6 +165,35 @@ def switch_off(intent, session, request_id, api_endpoint, api_access_token, conf
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+def button(intent, session, request_id, api_endpoint, api_access_token, config):
+    session_attributes = {}
+    reprompt_text = None
+    if 'Button' in intent['slots'] and 'value' in intent['slots']['Button'].keys():
+        should_end_session = True
+        button_name = intent['slots']['Button']['value']
+        if button_name in config['rest-functions']['button']['buttons']:
+            result = send_progressive_response(request_id, api_endpoint, api_access_token, "Ok.")
+            if result == False:
+                speech_output = "There was an error."
+            else:
+                # call synchronous rest service - will return 200 if successful and 500 if failure
+                rest_function = config['rest-functions']['button']['name'] + '/' + button_name
+                result, message, code = call_adb_service(rest_function, config)
+                if result == False:
+                    speech_output = "There was an error.  It was " + message + "."
+                else:
+                    speech_output = "Done."
+        else:
+            result = send_progressive_response(request_id, api_endpoint, api_access_token, "Sorry I don't know how to press the " + button_name + " button.")
+            if result == False:
+                speech_output = "There was an error."
+    else:
+        speech_output = "I'm not sure what button you want me to press, please try again."
+        should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
+
 def youtube_search(intent, session, request_id, api_endpoint, api_access_token, config):
     session_attributes = {}
     reprompt_text = None
@@ -352,6 +381,8 @@ def on_intent(intent_request, session, context, config):
         return skip_ad(intent, session, request_id, api_endpoint, api_access_token, config)
     elif intent_name == "SwitchOffIntent":
         return switch_off(intent, session, request_id, api_endpoint, api_access_token, config)
+    elif intent_name == "ButtonIntent":
+        return button(intent, session, request_id, api_endpoint, api_access_token, config)
     elif intent_name == "YoutubeSearchIntent":
         return youtube_search(intent, session, request_id, api_endpoint, api_access_token, config)
     elif intent_name == "NetflixSearchIntent":

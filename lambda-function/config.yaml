@@ -9,7 +9,18 @@ rest-functions:
     params: 1
   button:
     name: button
-    params: 1
+    buttons:
+      - enter
+      - play
+      - pause
+      - stop
+      - up
+      - down
+      - left
+      - right
+      - home
+      - back
+      - tv
 
 rest-actions:
   skip_ad:

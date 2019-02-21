@@ -258,7 +258,8 @@ def limit_remote_addr():
     #    abort(403)  # Forbidden
     #print "request is from " + str(request.remote_addr)
     # stop any requests from anywhere other than local network or aws lambda function
-    if str(request.remote_addr)[0:7] != "192.168" and str(request.remote_addr)[0:6] != "54.155":
+    if str(request.remote_addr)[0:7] != "192.168" and str(request.remote_addr)[0:3] != "34.":
+        print "request is not from an IP address we trust"
         return '', 403
 
 # tell the service to refresh the connection to the TV
