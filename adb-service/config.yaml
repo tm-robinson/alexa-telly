@@ -11,9 +11,13 @@ actions:
   switch_off:
     - keypress: KEYCODE_POWER
   youtube_search:
+    - keypress: KEYCODE_HOME
+    - wait: 5
     - app: YOUTUBE_PKG
       activity: YOUTUBE_ACT
-    - wait: 1
+    - wait: 5
+    - keypress: KEYCODE_MEDIA_STOP
+    - wait: 5
     - keypress: KEYCODE_SEARCH
     - wait: 1
     - keypress: KEYCODE_BACK
@@ -25,6 +29,7 @@ actions:
     - keypress: KEYCODE_ENTER
   netflix_search:
     - keypress: KEYCODE_HOME
+    - wait: 5
     - app: NETFLIX_PKG
       activity: NETFLIX_ACT
     - wait: 20
@@ -59,7 +64,7 @@ programmes:
     - keypress: KEYCODE_HOME
     - wait: 5
     - raw: shell am start -c android.intent.category.LEANBACK_LAUNCHER -a android.intent.action.VIEW -d https://www.netflix.com/watch/80025494 -f 0x10808000 -e source 30 com.netflix.ninja/.MainActivity
-    - wait: 5
+    - wait: 10
     - keypress: KEYCODE_ENTER
   # peppa pig:
   #   - app: NETFLIX_PKG
@@ -79,11 +84,15 @@ programmes:
     - keypress: KEYCODE_HOME
     - wait: 5
     - raw: shell am start -c android.intent.category.LEANBACK_LAUNCHER -a android.intent.action.VIEW -d https://www.netflix.com/watch/80026226 -f 0x10808000 -e source 30 com.netflix.ninja/.MainActivity
-    - wait: 5
+    - wait: 10
     - keypress: KEYCODE_ENTER
   diggers for kids:
+    - keypress: KEYCODE_HOME
+    - wait: 5
     - app: YOUTUBE_PKG
       activity: YOUTUBE_ACT
+    - wait: 5
+    - keypress: KEYCODE_MEDIA_STOP
     - wait: 5
     - keypress: KEYCODE_SEARCH
     - wait: 2
@@ -101,24 +110,28 @@ programmes:
       max_times: 30
     - keypress: KEYCODE_ENTER
   nursery rhymes:
-      - app: YOUTUBE_PKG
-        activity: YOUTUBE_ACT
-      - wait: 5
-      - keypress: KEYCODE_SEARCH
-      - wait: 2
-      - keypress: KEYCODE_BACK
-      - wait: 2
-      - keypress: KEYCODE_MOVE_END
-      - wait: 1
-      - delete: 50
-      - text: lbb
-      - keypress: KEYCODE_ENTER
-      - keypress_multiple: KEYCODE_DPAD_DOWN
-        times: 6
-      - keypress_rand: KEYCODE_DPAD_RIGHT
-        min_times: 0
-        max_times: 30
-      - keypress: KEYCODE_ENTER
+    - keypress: KEYCODE_HOME
+    - wait: 5
+    - app: YOUTUBE_PKG
+      activity: YOUTUBE_ACT
+    - wait: 5
+    - keypress: KEYCODE_MEDIA_STOP
+    - wait: 5
+    - keypress: KEYCODE_SEARCH
+    - wait: 2
+    - keypress: KEYCODE_BACK
+    - wait: 2
+    - keypress: KEYCODE_MOVE_END
+    - wait: 1
+    - delete: 50
+    - text: little baby bum
+    - keypress: KEYCODE_ENTER
+    - keypress_multiple: KEYCODE_DPAD_DOWN
+      times: 6
+    - keypress_rand: KEYCODE_DPAD_RIGHT
+      min_times: 10
+      max_times: 30
+    - keypress: KEYCODE_ENTER
   ben and holly:
     - keypress: KEYCODE_HOME
     - wait: 5

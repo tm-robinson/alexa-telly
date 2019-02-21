@@ -49,9 +49,13 @@ rest-endpoint in the lamba function's config-secure.yaml to point to it.
 9. Zip up the lambda function directory by running
 `zip -r9 ../function.zip .` from within the lambda-function directory.
 10. Upload the resultant zip file to the Lambda function on the AWS console.
-11. On the alexa developer console, point the skill to the lambda function.
-12. Ensure the skill's language is set to the same language as your Echo devices.
-13. Save and build the interaction model.
-14. On the testing tab, ensure testing is enabled in Development.
-15. Test the skill in the simulator by typing `alexa open telly remote`
+11. Set the lambda function timeout to 1 minute.
+12. On the alexa developer console, point the skill to the lambda function.
+13. Ensure the skill's language is set to the same language as your Echo devices.
+14. Save and build the interaction model.
+15. On the testing tab, ensure testing is enabled in Development.
+16. Test the skill in the simulator by typing `alexa open telly remote`
 and then `switch off`.
+
+Other repositories with examples that were helpful in creating this:
+https://github.com/DarrenVictoriano/daaf/blob/master/tools/ADB_Action_Scipt.py

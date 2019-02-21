@@ -19,6 +19,9 @@ from flask_restful import reqparse
 import os
 from random import randint
 import logging
+from ipaddress import ip_network, ip_address
+import json
+import requests
 
 USE_THREADING = False
 CONN_STATUS = False
@@ -28,6 +31,9 @@ with open("config.yaml", 'r') as ymlfile:
 
 with open("config-secure.yaml", 'r') as ymlfile:
     cfg_secure = yaml.load(ymlfile)
+
+with open("trusted-ips.yaml", 'r') as ymlfile:
+    cfg['trusted_ips'] = yaml.load(ymlfile)
 
 cfg['connection'] = cfg_secure['connection']
 cfg['credentials'] = cfg_secure['credentials']
@@ -62,6 +68,7 @@ def run_cmd(command):
         return False
     except subprocess32.CalledProcessError as cpe:
         print "CalledProcessError exception: " + str(cpe)
+        time.sleep(3)
         print "Trying again..."
         try:
             output = subprocess32.check_output(command.split(" "), stderr=subprocess32.STDOUT, timeout=10)
@@ -217,6 +224,28 @@ def run_action_sequence(action_name, args):
 
     return True, 200, "success"
 
+def check_aws_ip(ipaddr):
+    print "check_aws_ip: checking if " + ipaddr + " is in eu-west-1"
+    response = requests.get('https://ip-ranges.amazonaws.com/ip-ranges.json')
+
+    ip_json = json.loads(response.text)
+    prefixes = ip_json['prefixes']
+    my_ip = ip_address(unicode(ipaddr))
+    region = 'Unknown'
+    for prefix in prefixes:
+        if my_ip in ip_network(prefix['ip_prefix']):
+            region = prefix['region']
+            break
+    if region == 'eu-west-1':
+        print "check_aws_ip: adding " + ipaddr + " to list of trusted ips"
+        cfg['trusted_ips'] += [ipaddr]
+        with open("trusted-ips.yaml", 'w') as ymlfile:
+            yaml.dump(cfg['trusted_ips'], ymlfile, default_flow_style=False)
+        return True
+    else:
+        print "check_aws_ip: " + ipaddr + " doesnt seem to be in eu-west-1 therefore rejecting"
+        return False
+
 
 class localFlask(Flask):
         def process_response(self, response):
@@ -258,9 +287,11 @@ def limit_remote_addr():
     #    abort(403)  # Forbidden
     #print "request is from " + str(request.remote_addr)
     # stop any requests from anywhere other than local network or aws lambda function
-    if str(request.remote_addr)[0:7] != "192.168" and str(request.remote_addr)[0:3] != "34.":
-        print "request is not from an IP address we trust"
-        return '', 403
+    if str(request.remote_addr)[0:7] != "192.168" and str(request.remote_addr) not in cfg['trusted_ips']:
+        result = check_aws_ip(str(request.remote_addr))
+        if result == False:
+            print "request is not from an IP address we trust"
+            return '', 403
 
 # tell the service to refresh the connection to the TV
 class Connect(Resource):

@@ -63,16 +63,18 @@ def send_progressive_response(request_id, api_endpoint, api_access_token, speech
     print("result: " + str(response))
     return True
 
-def call_adb_service(function, config, param=None):
+def call_adb_service(function, config, param=None, timeout=5):
     rest_url = config['rest-endpoint'] + function
     print("call adb service: url '" + rest_url + "' params: "+ str(param))
     try:
-        response = requests.get(rest_url, params=param, timeout=5, auth=HTTPBasicAuth(config['user'],config['pass']))
+        response = requests.get(rest_url, params=param, timeout=timeout, auth=HTTPBasicAuth(config['user'],config['pass']))
     except Exception as e:
         print("exception during adb service get request: " + str(e))
         return False, "connection issue", 0
 
     if response.status_code != 200:
+        if response.status_code == 403:
+            return False, 'permission denied', response.status_code
         data = json.loads(response.text)
         return False, data['message'], response.status_code
     else:
@@ -206,7 +208,7 @@ def youtube_search(intent, session, request_id, api_endpoint, api_access_token, 
         else:
             # call synchronous rest service - will return 200 if successful and 500 if failure
             rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['youtube_search']['name']
-            result, message, code = call_adb_service(rest_function, config, param={'query': search_term})
+            result, message, code = call_adb_service(rest_function, config, param={'query': search_term}, timeout=40)
             if result == False:
                 speech_output = "There was an error.  It was " + message + "."
             else:
@@ -230,7 +232,7 @@ def netflix_search(intent, session, request_id, api_endpoint, api_access_token, 
         else:
             # call synchronous rest service - will return 200 if successful and 500 if failure
             rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['netflix_search']['name']
-            result, message, code = call_adb_service(rest_function, config, param={'query': search_term})
+            result, message, code = call_adb_service(rest_function, config, param={'query': search_term}, timeout=45)
             if result == False:
                 speech_output = "There was an error.  It was " + message + "."
             else:
@@ -255,7 +257,7 @@ def amazon_search(intent, session, request_id, api_endpoint, api_access_token, c
         else:
             # call synchronous rest service - will return 200 if successful and 500 if failure
             rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['amazon_search']['name']
-            result, message, code = call_adb_service(rest_function, config, param={'query': search_term})
+            result, message, code = call_adb_service(rest_function, config, param={'query': search_term}, timeout=40)
             if result == False:
                 speech_output = "There was an error.  It was " + message + "."
             else:
@@ -272,7 +274,7 @@ def play_programme(intent, session, request_id, api_endpoint, api_access_token, 
     reprompt_text = None
     if 'Programme' in intent['slots'] and 'value' in intent['slots']['Programme'].keys():
         should_end_session = True
-        programme = intent['slots']['Programme']['value']
+        programme = (intent['slots']['Programme']['value']).lower()
         # call the rest API to see if the requested programme is one of the ones we know how to play?  If not, respond with
         result = send_progressive_response(request_id, api_endpoint, api_access_token, "Ok.")
         if result == False:
@@ -281,7 +283,7 @@ def play_programme(intent, session, request_id, api_endpoint, api_access_token, 
             rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['check_programme']['name']
             result, message, code = call_adb_service(rest_function, config, param={'name': programme})
             if result == False:
-                if response.status_code == 404:
+                if code == 404:
                     speech_output = "Sorry, that's not a programme I know about, please ask Tom to add it to the list."
                 else:
                     speech_output = "There was an error.  It was " + message + "."
@@ -291,7 +293,7 @@ def play_programme(intent, session, request_id, api_endpoint, api_access_token, 
                     speech_output = "There was an error."
                 else:
                     rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['play_programme']['name']
-                    result, message, code = call_adb_service(rest_function, config, param={'name': programme})
+                    result, message, code = call_adb_service(rest_function, config, param={'name': programme}, timeout=45)
                     if result == False:
                         speech_output = "There was an error.  It was " + message + "."
                     else:
