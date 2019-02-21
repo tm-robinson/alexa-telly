@@ -5,6 +5,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 import yaml
 import json
+import re
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -275,6 +276,8 @@ def play_programme(intent, session, request_id, api_endpoint, api_access_token, 
     if 'Programme' in intent['slots'] and 'value' in intent['slots']['Programme'].keys():
         should_end_session = True
         programme = (intent['slots']['Programme']['value']).lower()
+        regex = re.compile('[^a-zA-Z ]')
+        programme = regex.sub('', programme)
         # call the rest API to see if the requested programme is one of the ones we know how to play?  If not, respond with
         result = send_progressive_response(request_id, api_endpoint, api_access_token, "Ok.")
         if result == False:
