@@ -64,7 +64,7 @@ def send_progressive_response(request_id, api_endpoint, api_access_token, speech
     print("result: " + str(response))
     return True
 
-def call_adb_service(function, config, param=None, timeout=5):
+def call_adb_service(function, config, param=None, timeout=10):
     rest_url = config['rest-endpoint'] + function
     print("call adb service: url '" + rest_url + "' params: "+ str(param))
     try:
