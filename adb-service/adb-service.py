@@ -11,6 +11,7 @@ import yaml
 import sys
 import re
 import time
+import calendar
 import threading
 import Queue
 import pprint
@@ -25,6 +26,7 @@ import requests
 
 USE_THREADING = False
 CONN_STATUS = False
+LAST_RECONNECT = 0
 
 with open("config.yaml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
@@ -85,6 +87,20 @@ def run_cmd(command):
 
 def reconnect():
     global CONN_STATUS
+    global LAST_RECONNECT
+
+    # check if we last reconnected more than 10 mins ago, if so then force a reconnect anyway
+    # this combats the fact that adb will sometimes return "already connected" when trying
+    # to connect, even if the connection is actually dead, which then means subsequent
+    # attempts to run a command will return an error
+    time_now = calendar.timegm(time.gmtime())
+    if (time_now - LAST_RECONNECT) > (60 * 10):
+        print "forcing reconnect as we haven't reconnected since %d and it is now %d" % (LAST_RECONNECT, time_now)
+        out = run_cmd("sudo /usr/bin/adb kill-server ; sudo /usr/bin/adb start-server")
+        if out == False:
+            CONN_STATUS = False
+            return False
+
     out = run_cmd("sudo /usr/bin/adb connect %s" % (cfg['connection']['ip']))
     if out == False:
         CONN_STATUS = False
@@ -95,6 +111,7 @@ def reconnect():
     else:
         CONN_STATUS = True
         print "reconnect is setting CONN_STATUS to True"
+        LAST_RECONNECT = time_now
     return CONN_STATUS
 
 def run_adb(command):

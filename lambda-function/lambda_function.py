@@ -270,6 +270,30 @@ def amazon_search(intent, session, request_id, api_endpoint, api_access_token, c
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+def type_text(intent, session, request_id, api_endpoint, api_access_token, config):
+    session_attributes = {}
+    reprompt_text = None
+    if 'Text' in intent['slots'] and 'value' in intent['slots']['Text'].keys():
+        should_end_session = True
+        text = intent['slots']['Text']['value']
+        result = send_progressive_response(request_id, api_endpoint, api_access_token, "Ok, typing in " + text + ".")
+        if result == False:
+            speech_output = "There was an error."
+        else:
+            # call synchronous rest service - will return 200 if successful and 500 if failure
+            rest_function = config['rest-functions']['action']['name'] + '/' + config['rest-actions']['type']['name']
+            result, message, code = call_adb_service(rest_function, config, param={'query': text}, timeout=40)
+            if result == False:
+                speech_output = "There was an error.  It was " + message + "."
+            else:
+                speech_output = "Ok, I've finished."
+
+    else:
+        speech_output = "I'm not sure what you want me to type, please try again."
+        should_end_session = False
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
 def play_programme(intent, session, request_id, api_endpoint, api_access_token, config):
     session_attributes = {}
     reprompt_text = None
@@ -398,6 +422,8 @@ def on_intent(intent_request, session, context, config):
         return play_programme(intent, session, request_id, api_endpoint, api_access_token, config)
     elif intent_name == "VolumeUpIntent" or intent_name == "VolumeDownIntent" or intent_name == "VolumeSetIntent":
         return adjust_volume(intent, session, request_id, api_endpoint, api_access_token, config)
+    elif intent_name == "TypeIntent":
+        return type_text(intent, session, request_id, api_endpoint, api_access_token, config)
     elif intent_name == "AMAZON.FallbackIntent":
         return get_fallback_response()
     elif intent_name == "AMAZON.HelpIntent":
